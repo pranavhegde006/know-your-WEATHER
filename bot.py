@@ -61,14 +61,6 @@ def get_weather(location):
         return res
 
 
-def get_quote():
-  response = requests.get("https://zenquotes.io/api/random")
-  json_data = json.loads(response.text)
-  myEmbed = discord.Embed(title='Inspirational quote!', description=json_data[0]['q'], color=0x0048cd)
-  myEmbed.set_author(json_data[0]['a'])
-  return myEmbed
-
-
     
 @client.event
 async def on_ready():
@@ -101,8 +93,11 @@ async def on_message(message):
             else : await message.channel.send(weather)
 
     if message.content.startswith('$inspire'):
-      quote = get_quote()
-      await message.channel.send(embed=quote)
+        response = requests.get("https://zenquotes.io/api/random")
+        json_data = json.loads(response.text)
+        myEmbed = discord.Embed(title='Inspirational quote!', description=json_data[0]['q'], color=0x0048cd)
+        myEmbed.set_author(json_data[0]['a'])
+        await message.channel.send(embed=myEmbed)
 
 my_secret = os.environ['TOKEN']
 
