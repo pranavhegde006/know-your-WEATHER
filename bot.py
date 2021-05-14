@@ -95,8 +95,8 @@ async def on_message(message):
     if message.content.startswith('$inspire'):
         response = requests.get("https://zenquotes.io/api/random")
         json_data = json.loads(response.text)
-        myEmbed = discord.Embed(title='Inspirational quote!', description=json_data[0]['q'], color=0x0048cd)
-        myEmbed.set_author(json_data[0]['a'])
+        myEmbed = discord.Embed(title='Inspirational quote!', description=str(json_data[0]['q']), color=0x0048cd)
+        myEmbed.set_author(str(json_data[0]['a']))
         await message.channel.send(embed=myEmbed)
 
 my_secret = os.environ['TOKEN']
