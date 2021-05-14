@@ -74,7 +74,9 @@ async def on_message(message):
       return
 
     if message.content.startswith('$hello'):
-      await message.channel.send('Hello there ' + '!')
+        embedVar = discord.Embed(title="Hello there!", description="PONG="+str(round(client.latency*1000))+"ms", color=0x0048CD)
+        embedVar.set_author(name="Pranav Hegde")
+        await message.channel.send(embed=embedVar)
 
     if message.content.startswith('$weather'):
         if len(message.content) <= 9:
