@@ -1,5 +1,8 @@
 import os
 import discord
+from discord import embeds
+from discord.colour import Color
+from discord.enums import _is_descriptor
 import requests 
 import json
 import datetime
@@ -61,8 +64,9 @@ def get_weather(location):
 def get_quote():
   response = requests.get("https://zenquotes.io/api/random")
   json_data = json.loads(response.text)
-  quote = json_data[0]['q'] + " -" + json_data[0]['a']
-  return quote
+  myEmbed = discord.Embed(title='Inspirational quote!', description=json_data[0]['q'], color=0x0048cd)
+  myEmbed.set_author(json_data[0]['a'])
+  return myEmbed
 
 
     
@@ -98,7 +102,7 @@ async def on_message(message):
 
     if message.content.startswith('$inspire'):
       quote = get_quote()
-      await message.channel.send(quote)
+      await message.channel.send(embed=quote)
 
 my_secret = os.environ['TOKEN']
 
