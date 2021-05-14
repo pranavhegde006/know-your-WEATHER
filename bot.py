@@ -74,7 +74,7 @@ async def on_message(message):
       return
 
     if message.content.startswith('$hello'):
-        embedVar = discord.Embed(title="Hello there!", description="PONG="+str(round(client.latency*1000))+"ms", color=0x0048CD)
+        embedVar = discord.Embed(title="Know your Weather", description="https://github.com/pranavhegde006/know-your-weather", color=0x0048CD)
         embedVar.set_author(name="Pranav Hegde")
         await message.channel.send(embed=embedVar)
 
@@ -97,9 +97,9 @@ async def on_message(message):
     if message.content.startswith('$inspire'):
         response = requests.get("https://zenquotes.io/api/random")
         json_data = json.loads(response.text)
-        myEmbed = discord.Embed(title='Inspirational quote!', description=str(json_data[0]['q']), color=0x0048cd)
-        myEmbed.set_author(str(json_data[0]['a']))
-        await message.channel.send(embed=myEmbed)
+        embedVar = discord.Embed(title="Inspirational quote!", description=str(json_data[0]['q']), color=0x0048CD)
+        embedVar.set_author(name=str(json_data[0]['a']))
+        await message.channel.send(embed=embedVar)
 
 my_secret = os.environ['TOKEN']
 
