@@ -8,6 +8,7 @@ import json
 import datetime
 from datetime import timezone
 from dotenv import load_dotenv
+import random
 
 load_dotenv()
 
@@ -95,10 +96,12 @@ async def on_message(message):
             else : await message.channel.send(weather)
 
     if message.content.startswith('$inspire'):
+        img_link = str("/assets/images" + str(random.randint(1,8)) + ".jpg")
         response = requests.get("https://zenquotes.io/api/random")
         json_data = json.loads(response.text)
-        embedVar = discord.Embed(title="Inspirational quote!", description=str(json_data[0]['q']), color=0x0048CD)
-        embedVar.set_author(name=str(json_data[0]['a']))
+        embedVar = discord.Embed(title="Quote!", description=str(json_data[0]['q']), color=0xffff00)
+        embedVar.add_field(name="Author", value=json_data[0]['a'])
+        embedVar.set_image(url= img_link)
         await message.channel.send(embed=embedVar)
 
 my_secret = os.environ['TOKEN']
