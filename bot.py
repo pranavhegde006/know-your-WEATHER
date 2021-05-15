@@ -1,18 +1,15 @@
 import os
 import discord
-from discord import embeds
-from discord.colour import Color
-from discord.enums import _is_descriptor
 import requests 
 import json
+from dotenv import load_dotenv
 import datetime
 from datetime import timezone
-from dotenv import load_dotenv
-import random
 
 load_dotenv()
 
 client = discord.Client()
+
 
 def convert(seconds):
 	seconds = seconds % (24 * 3600)
@@ -23,7 +20,7 @@ def convert(seconds):
 	return "%d:%02d:%02d" % (hour, minutes, seconds)
 	
 
-def get_weather(location):
+def get_weather(message, location):
     weather_api = os.environ['weather_key']
     api_call_link = "https://api.openweathermap.org/data/2.5/weather?q="+location+"&appid="+weather_api
     api_link = requests.get(api_call_link)
@@ -45,24 +42,33 @@ def get_weather(location):
         windSpeed = api_data['wind']['speed']
         windDirection = api_data['wind']['deg']
         if 'rain' in api_data:
-            rain1hrs = api_data['rain']['1h']
+            rain1hrs = str(api_data['rain']['1h']) + 'mm'
         else: 
             rain1hrs = "N/A"
         if 'clouds' in api_data:
-            clouds = api_data['clouds']['all']
+            clouds = str(api_data['clouds']['all']) + '%'
         else:
             clouds = "N/A"
         if 'snow' in api_data:
-            snow1hrs = api_data['snow']['1h']
+            snow1hrs = str(api_data['snow']['1h']) + '%'
         else: 
             snow1hrs = "N/A"
-
-        res = "Weather bot\n" + "Location: " + str(city) + "\n\n" + "Local time: " + str(time) + "\n" + "Temperature: " + str(current_temp) + "⁰C\n" + "Humidity: " + str(humidity) + "%\n" + "Rain volume for last hour: " + str(rain1hrs) + " mm\n" + "Wind speed: " + str(round(windSpeed*3.6, 2)) + "km/hr at " + str(windDirection) + "⁰\n" + "Snow volume for last hour: " + str(snow1hrs) + " mm\n" + "Cloudiness: " + str(clouds) + "%\n" + "Today's sunrise at " + str(sunrise) + " and sunset at " + str(sunset)
         
+        res = discord.Embed(title='Know your weather 🌦', description=str(city), color=0x0048CD)
+        res.add_field(name='Local time', value=str(time), inline=False)
+        res.add_field(name='Temperature', value=str(current_temp) + '⁰C', inline=True)
+        res.add_field(name='Humidity', value=str(humidity) + '%', inline=True)
+        res.add_field(name='Wind speed', value=str(windSpeed)+'km/hr at ' + str(windDirection) + '⁰', inline=True)
+        res.add_field(name='Cloudiness', value=clouds, inline=True)
+        res.add_field(name='Rain volume for the past hour', value=rain1hrs, inline=False)
+        res.add_field(name='Snow volume for the past hour', value=snow1hrs, inline=False)
+        res.add_field(name='Sunrise today', value=str(sunrise), inline=True)
+        res.add_field(name='Sunset today', value=str(sunset), inline=True)
+        res.add_field(name='Weather report requested by ', value=str(message.author)[:-5], inline=False)
         return res
 
 
-    
+
 @client.event
 async def on_ready():
     print("Bot {0.user} successfully logged in"
@@ -74,35 +80,55 @@ async def on_message(message):
     if message.author == client.user:
       return
 
-    if message.content.startswith('$hello'):
-        embedVar = discord.Embed(title="Know your Weather", description="https://github.com/pranavhegde006/know-your-weather", color=0x0048CD)
+    if message.content.startswith('#hello'):
+        embedVar = discord.Embed(title="Welcome to Know your Weather! 🌦", description='Use **$help** command for more.', color=0xFFA500)
+        embedVar.add_field(name = 'Project', value = 'https://github.com/pranavhegde006/know-your-weather', inline=False)
         embedVar.set_author(name="Pranav Hegde")
         await message.channel.send(embed=embedVar)
+    
+    if(message.content.startswith('#ping')):
+        embedVar = discord.Embed(title='Know your weather 🌦', description = "It's never too **late**!", color=0xff0000)
+        embedVar.add_field(name = '**PONG**', value=str(round(client.latency * 1000)) + 'ms', inline=False)
+        embedVar.add_field(name = '**$help**', value = 'Use $help command for more info.', inline=False)
+        await message.channel.send(embed = embedVar)
 
-    if message.content.startswith('$weather'):
+    if(message.content.startswith('#help')):
+        res = discord.Embed(title='Know your weather 🌦', description='I hope you find some useful commands here!', color=0xffffff)
+        res.add_field(name = '**$weather \{city_name\}**', value='This command fetches you the real time weather report of the city you enter. \nE.g.  $weather bangalore', inline=False)
+        res.add_field(name = '**$inspire**', value = 'Use $inspire to get some great, thought provoking quotes!', inline=False)
+        res.add_field(name = '**$ping**', value = 'Use $ping to know bot latency.', inline=False)
+        res.add_field(name = '**$help**', value = 'Well this is the command you are using right now xD. It gives you a brief capabilities of the bot.', inline=False)
+        res.add_field(name = '**$hello**', value='Use $hello to know about project details and more.', inline=False)
+        await message.channel.send(embed = res)
+
+    if message.content.startswith('#inspire'):
+      img_link = "https://images.unsplash.com/photo-1526750925531-9e8fdbf95de3?ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&ixlib=rb-1.2.1&auto=format&fit=crop&w=967&q=80"
+      response = requests.get("https://zenquotes.io/api/random")
+      json_data = json.loads(response.text)
+      embedVar = discord.Embed(title = str(json_data[0]['q']), description = str(json_data[0]['a']), color=0xffff00)
+      embedVar.add_field(name = '**$help**', value='Use $help command for more info', inline=False)
+      embedVar.set_author(name="Quote!")
+      embedVar.set_image(url= img_link)
+      await message.channel.send(embed=embedVar)
+    
+    if message.content.startswith('#weather'):
         if len(message.content) <= 9:
-            await message.channel.send('@' + str(message.author) + " fetching the weather details for you.\n...")
             await message.channel.send("Inappropriate request recieved")
         
         else:
-            await message.channel.send('@' + str(message.author) + " fetching the weather details for you.\n...")
-
             stri = message.content
             location = stri[9:]
-            weather = get_weather(location)
+
+            await message.channel.send(message.author.mention + ", hold tight! Fetching the weather report of " + location + " for you.\n...")
+            weather = get_weather(message, location)
 
             if weather == -1:
                 await message.channel.send("Please enter valid location.")
-            else : await message.channel.send(weather)
 
-    if message.content.startswith('$inspire'):
-        img_link = str("/assets/images" + str(random.randint(1,8)) + ".jpg")
-        response = requests.get("https://zenquotes.io/api/random")
-        json_data = json.loads(response.text)
-        embedVar = discord.Embed(title="Quote!", description=str(json_data[0]['q']), color=0xffff00)
-        embedVar.add_field(name="Author", value=json_data[0]['a'])
-        embedVar.set_image(url= img_link)
-        await message.channel.send(embed=embedVar)
+            else : 
+                await message.channel.send(embed=weather)
+
+
 
 my_secret = os.environ['TOKEN']
 
