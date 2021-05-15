@@ -4,7 +4,7 @@ Know your weather is a discord bot built with python to get all your weather upd
 
 
 ## Invite to your discord server right now!
-Just use [this link](https://tinyurl.com/discord-WeatherBot) to invite the **Know your WEATHER** bot to your discord server.
+Just use [this link](https://tinyurl.com/kyw-bot) to invite the **Know your WEATHER** bot to your discord server.
 
 # Salient features
 
