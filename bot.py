@@ -5,10 +5,24 @@ import json
 from dotenv import load_dotenv
 import datetime
 from datetime import timezone
+import random
 
 load_dotenv()
 
 client = discord.Client()
+
+images = [
+    'https://images.unsplash.com/photo-1526750925531-9e8fdbf95de3?ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&ixlib=rb-1.2.1&auto=format&fit=crop&w=967&q=80',
+    'https://images.unsplash.com/photo-1491234323906-4f056ca415bc?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=967&q=80',
+    'https://images.unsplash.com/photo-1500534623283-312aade485b7?ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&ixlib=rb-1.2.1&auto=format&fit=crop&w=1050&q=80',
+    'https://images.unsplash.com/photo-1515858168371-d8f5843eb9bd?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1050&q=80',
+    'https://images.unsplash.com/38/L2NfDz5SOm7Gbf755qpw_DSCF0490.jpg?ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&ixlib=rb-1.2.1&auto=format&fit=crop&w=1050&q=80',
+    'https://images.unsplash.com/photo-1474452926969-af7bfdb9ca39?ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&ixlib=rb-1.2.1&auto=format&fit=crop&w=1189&q=80',
+    'https://images.unsplash.com/photo-1474575767135-14237cca19dc?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1050&q=80',
+    'https://images.unsplash.com/photo-1446160657592-4782fb76fb99?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1049&q=80',
+    'https://images.unsplash.com/reserve/RONyPwknRQOO3ag4xf3R_Kinsey.jpg?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1050&q=80',
+    'https://images.unsplash.com/photo-1465188162913-8fb5709d6d57?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1050&q=80'
+    ]
 
 
 def convert(seconds):
@@ -80,19 +94,19 @@ async def on_message(message):
     if message.author == client.user:
       return
 
-    if message.content.startswith('#hello'):
+    if message.content.startswith('$hello'):
         embedVar = discord.Embed(title="Welcome to Know your Weather! 🌦", description='Use **$help** command for more.', color=0xFFA500)
         embedVar.add_field(name = 'Project', value = 'https://github.com/pranavhegde006/know-your-weather', inline=False)
         embedVar.set_author(name="Pranav Hegde")
         await message.channel.send(embed=embedVar)
     
-    if(message.content.startswith('#ping')):
+    if(message.content.startswith('$ping')):
         embedVar = discord.Embed(title='Know your weather 🌦', description = "It's never too **late**!", color=0xff0000)
         embedVar.add_field(name = '**PONG**', value=str(round(client.latency * 1000)) + 'ms', inline=False)
         embedVar.add_field(name = '**$help**', value = 'Use $help command for more info.', inline=False)
         await message.channel.send(embed = embedVar)
 
-    if(message.content.startswith('#help')):
+    if(message.content.startswith('$help')):
         res = discord.Embed(title='Know your weather 🌦', description='I hope you find some useful commands here!', color=0xffffff)
         res.add_field(name = '**$weather \{city_name\}**', value='This command fetches you the real time weather report of the city you enter. \nE.g.  $weather bangalore', inline=False)
         res.add_field(name = '**$inspire**', value = 'Use $inspire to get some great, thought provoking quotes!', inline=False)
@@ -101,8 +115,8 @@ async def on_message(message):
         res.add_field(name = '**$hello**', value='Use $hello to know about project details and more.', inline=False)
         await message.channel.send(embed = res)
 
-    if message.content.startswith('#inspire'):
-      img_link = "https://images.unsplash.com/photo-1526750925531-9e8fdbf95de3?ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&ixlib=rb-1.2.1&auto=format&fit=crop&w=967&q=80"
+    if message.content.startswith('$inspire'):
+      img_link = random.choice(images)
       response = requests.get("https://zenquotes.io/api/random")
       json_data = json.loads(response.text)
       embedVar = discord.Embed(title = str(json_data[0]['q']), description = str(json_data[0]['a']), color=0xffff00)
@@ -111,7 +125,7 @@ async def on_message(message):
       embedVar.set_image(url= img_link)
       await message.channel.send(embed=embedVar)
     
-    if message.content.startswith('#weather'):
+    if message.content.startswith('$weather'):
         if len(message.content) <= 9:
             await message.channel.send("Inappropriate request recieved")
         
