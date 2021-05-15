@@ -1,4 +1,4 @@
-# Know your WEATHER &nbsp;🌥
+# Know your WEATHER &nbsp; 🌦
 
 Know your weather is a discord bot built with python to get all your weather updates at a single place while you stay immersed in your game.
 
