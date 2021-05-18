@@ -143,10 +143,12 @@ async def on_message(message):
                 await message.channel.send(embed=weather)
     if message.content.startswith('$servers'):
         if(message.author.id == 660695048471707660):
-            dat = 'I\' currently present in: \n'
+            dat = 'I\'m currently present in: \n'
             guilds_details = await client.fetch_guilds(limit=150).flatten()
+            count = 0
             for guild_deets in guilds_details:
-                dat += f"\t{guild_deets.name}\n"
+                dat += f"\t\t {count}. {guild_deets.name}\n"
+                count += 1
             await message.channel.send(dat)
         else: 
             await message.channel.send('Say whaaat?')
