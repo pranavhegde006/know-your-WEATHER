@@ -1,10 +1,10 @@
-# Know your WEATHER &nbsp;🌥
+# Know your Weather &nbsp; 🌦
 
-Know your weather is a discord bot built with python to get all your weather updates at a single place while you stay immersed in your game.
+Know your weather is a discord bot built with python to get all your weather updates at a single place while you stay immersed in your game/conversation.
 
 
-## Invite to your discord server right now!
-Just use [this link](https://tinyurl.com/discord-WeatherBot) to invite the **Know your WEATHER** bot to your discord server.
+## Invite Know your weather to your discord server right now!
+Just use [this link](https://tinyurl.com/kyw-bot) to invite the **Know your Weather** bot to your discord server.
 
 # Salient features
 
