@@ -145,7 +145,7 @@ async def on_message(message):
         if(message.author.id == 660695048471707660):
             dat = 'I\'m currently present in: \n'
             guilds_details = await client.fetch_guilds(limit=150).flatten()
-            count = 0
+            count = 1
             for guild_deets in guilds_details:
                 dat += f"\t\t {count}. {guild_deets.name}\n"
                 count += 1
