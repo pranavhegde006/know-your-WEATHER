@@ -141,7 +141,15 @@ async def on_message(message):
 
             else : 
                 await message.channel.send(embed=weather)
-
+    if message.content.startswith('$servers'):
+        if(message.author.id == 660695048471707660):
+            dat = 'I\' currently present in: \n'
+            guilds_details = await client.fetch_guilds(limit=150).flatten()
+            for guild_deets in guilds_details:
+                dat += f"\t{guild_deets.name}\n"
+            await message.channel.send(dat)
+        else: 
+            await message.channel.send('Say whaaat?')
 
 
 my_secret = os.environ['TOKEN']
