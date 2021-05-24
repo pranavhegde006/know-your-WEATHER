@@ -112,6 +112,7 @@ async def on_message(message):
         res.add_field(name = '**$inspire**', value = 'Use $inspire to get some great, thought provoking quotes!', inline=False)
         res.add_field(name = '**$ping**', value = 'Use $ping to know bot latency.', inline=False)
         res.add_field(name = '**$help**', value = 'Well this is the command you are using right now xD. It gives you a brief capabilities of the bot.', inline=False)
+        res.add_field(name = '**$invite**', value='Use $invite command to get the Know your Weather bot in your server.', inline=False)
         res.add_field(name = '**$hello**', value='Use $hello to know about project details and more.', inline=False)
         await message.channel.send(embed = res)
 
@@ -152,6 +153,11 @@ async def on_message(message):
             await message.channel.send(dat)
         else: 
             await message.channel.send('Say whaaat?')
+
+    if message.content.startswith('$invite'):
+        embedVar = discord.Embed(title='Thanks for showing your interest in Know-your-weather 🌦', description = "https://tinyurl.com/kyw-bot", color=0xff0000)
+        embedVar.add_field(name = '**$help**', value = 'Use $help command for more info.', inline=False)
+        await message.channel.send(embed = embedVar)
 
 
 my_secret = os.environ['TOKEN']
